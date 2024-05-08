@@ -1,5 +1,8 @@
 ﻿#Requires AutoHotkey v2.0
 
+; Kyrlian 2024
+; https://github.com/kyrlian/MYOWM-AutoHotkey
+
 ; https://www.autohotkey.com/docs/v2/Hotkeys.htm#Symbols
 ; #:win, !:Alt, ^:Ctrl, +:Shift
 ^!Left:: go_left ; Ctrl Alt Left
@@ -22,7 +25,7 @@ go_left() {
         screenh := screeny2 - screeny
         if (winx > screenx) {
             ; MsgBox("go_left: Snap left to " screenx)
-            WinMove(screenx, , winw + screenx - winx,) ; snap left and widden
+            WinMove(screenx, , winw + winx - screenx,) ; snap left and widden
         } else if (winw > screenw / 2) {
             ; MsgBox("go_left: Resize to " screenw / 2)
             WinMove(, , screenw / 2,) ; resize to half
