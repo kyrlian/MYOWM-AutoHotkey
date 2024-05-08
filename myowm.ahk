@@ -117,7 +117,7 @@ GetSideMonitor(monindex, direction) {
             }
         }
     }
-    MsgBox("GetSideMonitor(" direction ") not found, returning -1")
+    ; MsgBox("GetSideMonitor(" direction ") not found, returning -1")
     return -1
 }
 
