@@ -29,16 +29,17 @@ go_left() {
         } else if (winw > screenw / 2) {
             ; MsgBox("go_left: Resize to " screenw / 2)
             WinMove(, , screenw / 2,) ; resize to half
-        } else if (winh < screenh) {
+        } else if (winh != screenh) {
             ; MsgBox("go_left: Maximize vertically to " screenh)
             WinMove(, screeny, , screenh) ; maximize vertically
         } else {
-            leftmon := get_side_monitor(mon, "left")
-            if (leftmon >= 0) {
-                leftmonname := MonitorGetName(leftmon)
-                MonitorGetWorkArea(leftmon, &leftscreenx, &leftscreeny, &leftscreenx2, &leftscreeny2)
-                ; MsgBox("go_left: Move to left monitor " leftmonname " at " leftscreenx)
-                WinMove(leftscreenx) ; move to left monitor
+            sidemon := get_side_monitor(mon, "left")
+            if (sidemon >= 0) {
+                MonitorGetWorkArea(sidemon, &sidemonx, &sidemony, &sidemonx2, &sidemony2)
+                sidemonw := sidemonx2 - sidemonx
+                sidemonh := sidemony2 - sidemony
+                WinMove(sidemonx + sidemonw / 2, sidemony)  ; move to side monitor
+                WinMove(, , sidemonw / 2, sidemonh) ; and resize
             }
         }
     }
@@ -60,16 +61,18 @@ go_right() {
         } else if (winw > screenw / 2) {
             ; MsgBox("go_right: Resize right to " screenw / 2)
             WinMove(screenx + screenw / 2, , screenw / 2,) ; resize to half
-        } else if (winh < screenh) {
+        } else if (winh != screenh) {
             ; MsgBox("go_right: Maximize vertically to " screenh)
             WinMove(, screeny, , screenh)  ; maximize vertically
         } else {
-            rightmon := get_side_monitor(mon, "right")
-            if (rightmon >= 0) {
-                rightmonname := MonitorGetName(rightmon)
-                MonitorGetWorkArea(rightmon, &rightscreenx, &rightscreeny, &rightscreenx2, &rightscreeny2)
-                ; MsgBox("go_right: Move to right monitor " rightmonname " at " rightscreenx)
-                WinMove(rightscreenx) ; move to right monitor
+            sidemon := get_side_monitor(mon, "right")
+            if (sidemon >= 0) {
+                ; get_monitor_info(sidemon)
+                MonitorGetWorkArea(sidemon, &sidemonx, &sidemony, &sidemonx2, &sidemony2)
+                sidemonw := sidemonx2 - sidemonx
+                sidemonh := sidemony2 - sidemony
+                WinMove(sidemonx, sidemony) ; move to side monitor
+                WinMove(, , sidemonw / 2, sidemonh) ; and resize -- doesnt work when done all in one
             }
         }
     }
@@ -85,8 +88,25 @@ go_up() {
         MonitorGetWorkArea(mon, &screenx, &screeny, &screenx2, &screeny2)
         screenw := screenx2 - screenx
         screenh := screeny2 - screeny
-        MsgBox("TODO go_up")
-        ; TODO
+        if (winy > screeny) {
+            ; MsgBox("go_up: Snap top to " screeny)
+            WinMove(, screeny, , winh + winy - screeny) ; snap top and widden
+        } else if (winh > screenh / 2) {
+            ; MsgBox("go_up: Resize to " screenw / 2)
+            WinMove(, , , screenh / 2) ; resize to half
+        } else if (winw != screenw) {
+            ; MsgBox("go_up: Maximize horizonally to " screenh)
+            WinMove(screenx, , screenw,) ; maximize horizonally
+        } else {
+            sidemon := get_side_monitor(mon, "up")
+            if (sidemon >= 0) {
+                MonitorGetWorkArea(sidemon, &sidemonx, &sidemony, &sidemonx2, &sidemony2)
+                sidemonw := sidemonx2 - sidemonx
+                sidemonh := sidemony2 - sidemony
+                WinMove(sidemonx, sidemony + sidemonh / 2) ; move to side monitor
+                WinMove(, , sidemonw, sidemonh / 2) ; and resize
+            }
+        }
     }
 }
 
@@ -100,8 +120,25 @@ go_down() {
         MonitorGetWorkArea(mon, &screenx, &screeny, &screenx2, &screeny2)
         screenw := screenx2 - screenx
         screenh := screeny2 - screeny
-        MsgBox("TODO go_down")
-        ; TODO
+        if (winy2 < screeny2) {
+            ; MsgBox("go_down: Widden down to "winh + screeny2 - winy2)
+            WinMove(, , , winh + screeny2 - winy2)  ; widden to reach bottom screen border
+        } else if (winh > screenh / 2) {
+            ; MsgBox("go_down: Resize down to " screenh / 2)
+            WinMove(, screeny + screenh / 2, , screenh / 2) ; resize to half
+        } else if (winw != screenw) {
+            ; MsgBox("go_down: Maximize horizonally to " screenh)
+            WinMove(screenx, , screenw,) ; maximize horizonally
+        } else {
+            sidemon := get_side_monitor(mon, "down")
+            if (sidemon >= 0) {
+                MonitorGetWorkArea(sidemon, &sidemonx, &sidemony, &sidemonx2, &sidemony2)
+                sidemonw := sidemonx2 - sidemonx
+                sidemonh := sidemony2 - sidemony
+                WinMove(sidemonx, sidemony) ; move to side monitor
+                WinMove(, , sidemonw, sidemonh / 2) ; and resize
+            }
+        }
     }
 }
 
@@ -115,7 +152,7 @@ go_full() {
         MonitorGetWorkArea(mon, &screenx, &screeny, &screenx2, &screeny2)
         screenw := screenx2 - screenx
         ; MsgBox("winw: " winw ", screenw:" screenw)
-        if (winw < screenw ) {
+        if (winw < screenw) {
             WinMaximize("A")
         } else {
             WinRestore("A")
@@ -130,8 +167,8 @@ switch_window(direction) {
     winids := WinGetList(, , "Program Manager")
     cleaned := drop_unnamed_wins(winids)
     sortedids := array_sort(cleaned)
-    ; MsgBox("current: " activeid)
-    ; get_win_info(sortedids)
+    ;MsgBox("current: " activeid)
+    ;get_win_info(sortedids)
     shift := 1
     if (direction == "left") {
         shift := -1
@@ -141,7 +178,7 @@ switch_window(direction) {
             targetid := id + shift
             if (targetid < 1) { ; array index starts at 1
                 targetid := sortedids.Length
-            } else if (targetid >= sortedids.Length) {
+            } else if (targetid > sortedids.Length) {
                 targetid := 1
             }
             WinActivate { Hwnd: sortedids[targetid] }
@@ -165,7 +202,7 @@ drop_unnamed_wins(winids) {
 get_win_info(winids) {
     s := ""
     for (id, winid in winids) {
-        s := s ", " WinGetTitle({ Hwnd: winid })
+        s := s ", " winid ":" WinGetTitle({ Hwnd: winid })
     }
     MsgBox(s)
     return s
@@ -202,40 +239,46 @@ array_sort(a) {
 ;===========================================
 ;============== monitor utils ==============
 ;===========================================
+square(a) {
+    return a * a
+}
 
 get_side_monitor(monindex, direction) {
     MonitorGet(monindex, &monx, &mony, &monx2, &mony2)
+    moncenterx := (monx + monx2) / 2
+    moncentery := (mony + mony2) / 2
     ; MsgBox("get_side_monitor(" direction ") : " monindex ", " MonitorGetName(monindex) " info: x:" monx ", y:" mony ", x2:" monx2 ", y2:" mony2)
     MonitorCount := MonitorGetCount()
+    mindist := -1
+    mini := -1
     Loop MonitorCount {
         if (A_Index != monindex) {
             MonitorGet(A_Index, &sidemonx, &sidemony, &sidemonx2, &sidemony2)
+            x := (sidemonx + sidemonx2) / 2
+            y := (sidemony + sidemony2) / 2
+            dist := square(x + moncenterx) + square(y + moncentery)
             ; MsgBox("get_side_monitor(" direction ") : " A_Index ", " MonitorGetName(A_Index) " info: x:" sidemonx ", y:" sidemony ", x2:" sidemonx2 ", y2:" sidemony2)
             ;MonitorGetWorkArea(A_Index, &wax, &way, &wax2, &way2)
-            if (direction == "left" and sidemonx2 < monx) {
-                ; MsgBox("get_side_monitor(" direction ") : " A_Index ", " MonitorGetName(A_Index))
-                return A_Index
-            } else if (direction == "right" and sidemonx > monx2) {
-                ; MsgBox("get_side_monitor(" direction ") : " A_Index ", " MonitorGetName(A_Index))
-                return A_Index
-            } else if (direction == "up" and sidemony2 < mony) {
-                ; MsgBox("get_side_monitor(" direction ") : " A_Index ", " MonitorGetName(A_Index))
-                return A_Index
-            } else if (direction == "down" and sidemony > mony) {
-                ; MsgBox("get_side_monitor(" direction ") : " A_Index ", " MonitorGetName(A_Index))
-                return A_Index
+            if ((direction == "left" and x < monx and y > mony and y < mony2)
+                or (direction == "right" and x > monx2 and y > mony and y < mony2)
+                or (direction == "up" and y < mony and x > monx and x < monx2)
+                or (direction == "down" and y > mony2 and x > monx and x < monx2)) {
+                if (mindist == -1 or dist < mindist) {
+                    mindist := dist
+                    mini := A_Index
+                }
             }
         }
     }
     ; MsgBox("get_side_monitor(" direction ") not found, returning -1")
-    return -1
+    return mini
 }
 
 get_win_monitor(winid) {
     ; https://www.autohotkey.com/docs/v2/lib/WinGetPos.htm
     WinGetPos(&winx, &winy, &winw, &winh, { Hwnd: winid })
     x := winx + winw / 2
-    y :=  winy + winh / 2
+    y := winy + winh / 2
     MonitorCount := MonitorGetCount()
     Loop MonitorCount {
         ; MonitorGet(A_Index, &monx, &mony, &monx2, &mony2)
@@ -247,5 +290,13 @@ get_win_monitor(winid) {
     MsgBox("get_win_monitor(" winid ") not found, returning -1")
     return -1
 }
+
+get_monitor_info(i) {
+    sidemonname := MonitorGetName(i)
+    MonitorGet(i, &monx, &mony, &monx2, &mony2)
+    MonitorGetWorkArea(i, &wax, &way, &wax2, &way2)
+    MsgBox(sidemonname "MonitorGet: " monx " " mony " " monx2 " " mony2 " -- MonitorGetWorkArea: " wax " " way " " wax2 " " way2)
+}
+
 
 ; MsgBox "Reloaded!"
