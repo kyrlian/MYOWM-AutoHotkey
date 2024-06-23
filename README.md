@@ -27,3 +27,8 @@ git clone https://github.com/kyrlian/MYOWM-AutoHotkey
 - Create a shortcut to `myowm.ahk` in windows startup directory 
 `%appdata%\Microsoft\Windows\Start Menu\Programs\Startup`
 to run at startup
+
+## Additional stuff
+
+- [win-remap.ahk](./win-remap.ahk) remaps `Win+C` and `Win+V` to `Ctrl+C` and `Ctrl+V`
+- [all.ahk](./all.ahk) just loads both `myowm.ahk` and `win-remap.ahk`
