@@ -5,6 +5,12 @@
 
 ; Note, I have an AZERTY keyboard
 
+; Reload script
+<^>!r::{
+    MsgBox "Reloading"
+    Reload
+}
+
 ; Copy/Paste
 #c::^c ; Win C to Ctrl C (Copy)
 #v::^v ; Win V to Ctrl V (Paste)
@@ -15,9 +21,16 @@
 
 ; Brackets on : t/y:() ; g/h:[] ; b/n:{}
 ; Note: Also managed on my keychron with left fn + t/y:() ; g/h:[] ; b/n:{}
-<^>!t::(
-<^>!y::)
-<^>!g::[
-<^>!h::]
-<^>!b::<^>!' ;  for { the string doesnt work, use the combination key : AltGR '
-<^>!n::<^>!= ;  for } the string doesnt work, use the combination key : AltGR =
+<^>!t::Send "("
+<^>!y::Send ")"
+<^>!g::Send "["
+<^>!h::Send "]"
+<^>!b::SendText "{" ; <^>!b::<^>!' ;  for { Send string doesnt work
+<^>!n::SendText "}" ; <^>!n::<^>!= ;  for } Send string doesnt work
+
+; Symbols on AltGR + similar char
+<^>!a::Send "@"
+<^>!s::Send "$"
+
+; quick type my email with AltGr M
+<^>!m::Send "kyrlian@gmail.com"
