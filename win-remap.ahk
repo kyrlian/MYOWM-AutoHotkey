@@ -34,6 +34,7 @@
 ; Symbols on AltGr + similar char
 <^>!a::Send "@"
 <^>!s::Send "$"
+<^>!c::Send "ç"
 
 ; quick type my email with AltGr (or Ctrl+Alt) + M
 <^>!m::SendText "kyrlian@gmail.com"
