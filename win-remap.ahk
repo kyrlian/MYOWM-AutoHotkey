@@ -1,4 +1,7 @@
 ; Kyrlian 2024
+
+; https://www.autohotkey.com/docs/v2/howto/SendKeys.htm
+
 ; https://www.autohotkey.com/docs/v2/Hotkeys.htm#Symbols
 ; #:win, !:Alt, ^:Ctrl, +:Shift
 ; <:left key, >:right key
