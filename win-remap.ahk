@@ -1,11 +1,12 @@
+; Kyrlian 2024
 ; https://www.autohotkey.com/docs/v2/Hotkeys.htm#Symbols
 ; #:win, !:Alt, ^:Ctrl, +:Shift
 ; <:left key, >:right key
-; <^>!:AltGr (because in windows Ctrl+Alt = AltGr ; https://en.wikipedia.org/wiki/AltGr_key)
+; <^>!:AltGr (because in windows Left Ctrl + Right Alt = AltGr ; https://en.wikipedia.org/wiki/AltGr_key)
 
-; Note, I have an AZERTY keyboard
+; Note, I have a French AZERTY keyboard
 
-; Reload script :
+; Reload script
 ^!r::{ ; AltGr + r
     MsgBox "Reloading"
     Reload
@@ -16,26 +17,31 @@
 #v::^v ; Win V to Ctrl V (Paste)
 
 ; Mac like (use target string instead of key combo)
-<^>!,::~ ; AltGr , to tilde ~ (On mac it's on 'n', but I use AltGr N for } )
-<^>!l::| ; AltGr l to pipe |
+<^>!n::SendText "~" ; AltGr n to tilde ~ (On mac it's on 'n', but I use AltGr N for } )
+<^>!l::SendText "|" ; AltGr l to pipe |
+<^>!SC034::SendText "\" ; AltGr : (using the scan code for colon : 034) to backslash \
 ; {} on AltGr (or Ctrl+Alt) + Shift + ()
 ^!+(::SendText "{"
 ^!+)::SendText "}"
 
-; Brackets on AltGr +: t/y:() ; g/h:[] ; b/n:{}
+; Brackets on AltGr and t/y for () ; g/h for [] ; and shift g/h for {}
 ; Note: Also managed on my keychron with left fn + t/y:() ; g/h:[] ; b/n:{}
-<^>!t::Send "("
-<^>!y::Send ")"
-<^>!g::Send "["
-<^>!h::Send "]"
-<^>!b::SendText "{" ; <^>!b::<^>!' ;  for { Send string doesnt work
-<^>!n::SendText "}" ; <^>!n::<^>!= ;  for } Send string doesnt work
+<^>!t::SendText "("
+<^>!y::SendText ")"
+<^>!g::SendText "["
+<^>!h::SendText "]"
+<^>!+g::SendText "{" ; I had those on b/n, but I use AltGr n for tilde ~, so moving {} to AltGr Shift g/h
+<^>!+h::SendText "}" ; Note 'Send' doesnt work for {  and }
 
 ; Symbols on AltGr + similar char
-<^>!a::Send "@"
-<^>!s::Send "$"
-<^>!c::Send "ç"
+<^>!a::SendText "@"
+; <^>!s::Send "$" ; Removed as I use Ctrl Alt s for split in wezterm
+<^>!c::SendText "ç"
+<^>!d::SendText "#" ; Hash is 'Diese' in French, so it's easy to remember :) 
+
+; backtick ` on Altgr ² (left of 1) - it's on AltGr 7 on French keyboard, but I always forget
+<^>!²::SendText '``' ; Note the backtick needs to be doubled ``
 
 ; quick type my email with AltGr (or Ctrl+Alt) + M
-<^>!m::SendText "kyrlian@gmail.com"
-^!m::SendText "kyrlian@gmail.com"
+; <^>!m::SendText "kyrlian@gmail.com"
+^!m::SendText 'kyrlian@gmail.com'
