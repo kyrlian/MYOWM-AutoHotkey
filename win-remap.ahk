@@ -47,6 +47,8 @@
 ; also on Altgr + shift + 3 or 4 (" and ' )
 <^>!+'::SendText '``' ; Note the backtick needs to be doubled ``
 
+; Launch wezterm with Win+W (replacing 'show windows widgets')
+#w::Run "wezterm-gui.exe"
 
 ; quick type my email with AltGr (or Ctrl+Alt) + M
 ; <^>!m::SendText "kyrlian@gmail.com"
