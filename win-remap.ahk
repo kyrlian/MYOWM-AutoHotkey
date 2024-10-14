@@ -43,8 +43,9 @@
 <^>!d::SendText "#" ; Hash is 'Diese' in French, so it's easy to remember :) 
 
 ; backtick ` on Altgr ² (left of 1) - it's on AltGr 7 on French keyboard, but I always forget
+<^>!²::SendText '``' ; Note the backtick needs to be doubled ``
+; backtick ` on Altgr + shift + 3 or 4 (" and ' )
 <^>!+"::SendText '``' ; Note the backtick needs to be doubled ``
-; also on Altgr + shift + 3 or 4 (" and ' )
 <^>!+'::SendText '``' ; Note the backtick needs to be doubled ``
 
 ; Launch wezterm with Win+W (replacing 'show windows widgets')
